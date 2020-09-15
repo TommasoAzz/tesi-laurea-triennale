@@ -1,0 +1,99 @@
+%**************************************************************
+\section{Flutter, il framework scelto}
+\label{sec:scelta-flutter}
+
+%**************************************************************
+\subsection{Ragioni della scelta}
+\label{subsec:ragioni-scelta}
+
+Dopo aver fatto un analisi delle caratteristiche di ciascun \gls{frameworkg} e averli messi a confronto è stato scelto \emph{Flutter}.\\
+\emph{Ionic} e la realizzazione di una "semplice" \emph{web app} sono state scartate sia per l'incertezza nel poter garantire prestazioni adeguate agli obiettivi da raggiungere che, nel caso della web app, per la difficoltà di accedere alle \gls{api} di sistema.
+Inoltre, nel caso di \emph{Ionic} le tecnologie da apprendere sarebbero state fin troppe (esclusi ovviamente i tre linguaggi): si sarebbero dovuti apprendere il funzionamento di \emph{Apache Cordova} o \emph{Capacitor}, il \gls{frameworkg} in sé più altri per migliorare, ad esempio, l'interfaccia e l'esperienza utente.\\
+La scelta di scartare \emph{Xamarin} invece è legata a ragioni prettamente economiche, implicate dall'\gls{ide} da esso imposto per lo sviluppo.\\
+Infine, scegliere fra \emph{React Native} e \emph{Flutter} è stato più complesso, poiché da certi punti di vista sono molto simili. Entrambi offrono buone performance poiché generano app native, possono accedere senza problemi alle funzionalità del sistema operativo e all'occorrenza avere dei meccanismi per permettere la comunicazione fra il linguaggio del \gls{frameworkg} e quello del sistema sottostante (Java/Kotlin per Android, Objective-C/Swift per iOS).\\
+La scelta finale è quindi ricaduta su \emph{Flutter} per le seguenti ragioni:
+\begin{itemize}
+    \item innanzitutto, JavaScript e Dart sono due linguaggi dal punto di vista sintattico molto simili ma, mentre JavaScript è sostanzialmente stabile (dovuto principalmente dalla standardizzazione), Dart è in continua evoluzione e può ancora migliorare e diventare, per certi aspetti, migliore di JavaScript (verso la fine dello stage era in corso di introduzione la null-safety a tempo di compilazione\footcite{site:null-safety-dart});
+    \item a differenza di JavaScript che è debolmente tipato e senza classi (seppur sia orientato agli oggetti), Dart è orientato agli oggetti e fortemente tipato (nonostante permetta l'inferenza dei tipi), che può essere un notevole aiuto ad evitare errori;
+    \item Dart permette di essere sia interpretato che compilato, mentre JavaScript può essere solo interpretato;
+    \item riguardo ai due \gls{frameworkg} invece, la quantità di componenti già integrate in \emph{React Native} è difficilmente paragonabile alla vasta gamma di widget offerta da \emph{Flutter};
+    \item \emph{Flutter} è fortemente integrato nell'\gls{ide} Android Studio essendo entrambi di Google, ma offre anche estensioni molto utili ed efficaci per altri editor, come quella per \emph{Visual Studio Code};
+    \item \emph{Flutter} utilizza un unico linguaggio, uniforme per l'intero codice sorgente dell'applicazione, cosa che invece non avviene per \emph{React Native}.
+\end{itemize}
+Si può quindi affermare che il linguaggio, Dart, e la disponibilità di widget siano stati le principali ragioni che hanno spinto a questa scelta. Per questo motivo entrambi verranno affrontati  in dettaglio nelle prossime sezioni.
+
+%**************************************************************
+\subsection{Sviluppo di un'app con Flutter}
+\label{subsec:sviluppo-app-flutter}
+
+\textbf{N.B.} Quella che segue non è una guida all'installazione di \emph{Flutter}, piuttosto una semplice introduzione sugli strumenti necessari e le possibilità offerte per lo sviluppatore.\\\\
+
+\subsubsection{Strumenti necessari}
+\label{subsubsec:strumenti-necessari}
+
+\emph{Flutter}, ma anche tutte le altre tecnologie scelte, dipendono per la parte Android dal suo \gls{sdk} e per la parte di iOS dell'\gls{ide} XCode, che include tutto quanto il necessario.\\
+È necessario infatti dotarsi di entrambi gli \gls{sdk} prima di poter eseguire o compilare un'applicazione con questa tecnologia, consci del fatto che:
+\begin{itemize}
+    \item per avere XCode si deve avere a disposizione un computer con MacOS installato e un account \emph{Apple Developer};
+    \item l'\gls{sdk} di Android è disponibile per Windows, MacOS, Linux e anche Chrome OS, attraverso l'editor Android Studio oppure \emph{standalone}.
+\end{itemize}
+Per semplificare il lavoro dello sviluppatore sono disponibili delle estensioni ufficiali per i principali \gls{ide} di IntelliJ (come IDEA), per Android Studio e per Visual Studio Code. È disponibile anche un'estensione per l'editor di testo da terminale Emacs.
+Queste estensioni forniscono auto-completamento del codice, evidenziazione della sintassi e assistenza per la creazione di widget, supporto in fase di esecuzione e compilazione\footcite{site:flutter-editor-setup}.
+
+\subsubsection{Modalità di esecuzione}
+\label{subsubsec:modalita-esecuzione}
+
+Mentre l'attività di sviluppo è comune a tutte le tecnologie e linguaggi, l'esecuzione, il testing, il debugging e la compilazione dipendono inerentemente dalla tecnologia.\\
+Il linguaggio Dart permette, come detto precedentemente, di essere sia interpretato che compilato:
+\begin{itemize}
+    \item l'interpretazione viene usata in fase di sviluppo per offrire una maggiore velocità nel caricamento al primo avvio e per accogliere modifiche a runtime, con ovvie ripercussioni sulle performance;
+    \item la compilazione viene invece usata in fase di rilascio dell'applicazione, per generare i pacchetti da distribuire per Android e iOS, o per generare JavaScript (in caso di rilascio per web).
+\end{itemize}
+Una spiegazione più dettagliata su queste caratteristiche di Dart vengono fatte nella sezione "\hyperref[sec:linguaggio-dart]{Dart, il linguaggio usato in Flutter}".\\
+Una volta che l'app viene eseguita durante lo sviluppo (ad esempio per fare attività di debugging), ci sono due funzionalità che permettono di evitare continui riavvi per effettuare modifiche (cosa che avviene ad esempio sviluppando per Android con il suo \gls{sdk}): l'\emph{Hot Reload} e l'\emph{Hot Restart}.\\
+L'\emph{Hot Reload} permette di effettuare modifiche che non alterano lo stato dell'applicazione a runtime (la prossima sotto-sezione si occupa più in dettaglio sul concetto di stato) e senza dover riavviare l'applicazione.
+Per esempio, se in un'interfaccia utente viene modificata una proprietà di un widget come il colore, l'interprete è in grado di catturare la modifica e sostituire nell'interfaccia solo quello che è stato aggiornato, lasciando invariato il resto.\\
+L'\emph{Hot Restart} permette di raggiungere lo stesso scopo dell'\emph{Hot Reload} ma, riavviando l'applicazione, ne resetta anche lo stato.
+Tutto questo senza dover terminare l'attività di debugging e farla ripartire (c'è un notevole risparmio di tempo perché il setup del debugging iniziale viene saltato).
+Usare l'\emph{Hot Restart} è utile quando si modifica lo stato di alcuni widget, ma anche quando vengono aggiunte altre classi, metodi e campi dati, o \gls{assetg}.
+
+%**************************************************************
+\subsection{Stateless o stateful? I widget in Flutter}
+\label{subsec:stateless-stateful}
+
+In \emph{Flutter} la rappresentazione dell'interfaccia grafica avviene mediante composizione di oggetti detti widget.\\
+Per widget si intende una qualsiasi componente che forma l'interfaccia utente e può rappresentare: 
+\begin{itemize}
+    \item un oggetto da "disegnare" (traduzione letterale dell'inglese \emph{to draw}) sullo schermo;
+    \item un elemento di gestione del layout (per esempio il padding o un contenitore con dimensioni fisse);
+    \item un controllore di interazioni dell'utente;
+    \item una risorsa di gestione dello stato dell'applicazione, dei temi, delle animazioni e della navigazione.
+\end{itemize}
+La creazione di nuovi widget formati mediante composizione di altri widget è incentivata, rispetto alla creazione mediante ereditarietà, tipica di altri \gls{frameworkg}.\\
+La composizione viene resa possibile da un campo dati \texttt{child}, se il widget può avere un solo sotto-widget diretto, o \texttt{children}, se può averne più di uno diretto. Se il widget non ha nemmeno un sotto-widget diretto, è un widget "foglia"\footnote{I widget del \gls{frameworkg}, dato che necessitano di essere quanto più generici possibili, hanno - tipicamente - un campo dati \texttt{child} o \texttt{children} che se non valorizzati li rende foglie. I widget definiti da un utente non necessariamente hanno un campo dati \texttt{child} ma grazie alla composizione possono creare widget complessi, non facendo di loro widget foglia.}.\\
+Si parla di sotto-widget diretto e di sotto-widget foglia perché questi sono a loro volta widget: questo tipo di implementazione conduce a una naturale rappresentazione mediante una struttura ad albero e infatti, parlando dell'interfaccia grafica in \emph{Flutter}, ci si riferisce spesso ad un \emph{Widget tree} (albero di widget).\\
+I widget ereditano tutti dalla classe \texttt{Widget}, per non porre alcun limite al loro utilizzo, e sono \textbf{immutabili}, il che significa che una volta istanziati non cambiano mai per tutto il loro ciclo di vita (dalla creazione alla distruzione).\\
+Come è possibile allora avere una interfaccia utente dinamica basata sulla risposta ad eventi\footnote{Per evento si fa riferimento al concetto presente nella programmazione ad eventi. Un evento è un'azione esterna al normale flusso di esecuzione del programma, che viene catturata da opportuni listener il cui compito è collegarlo all'esecuzione di un set di istruzioni, per esempio l'esecuzione di una funzione.}?
+Introducendo il concetto di stato e di due sottotipi della classe \texttt{Widget}: \texttt{StatelessWidget} e \texttt{StatefulWidget}.\\
+Si parla di stato quando ci si riferisce ai dati non dipendenti dai widget stessi e che vengono utilizzati per disegnare l'interfaccia: ad esempio, fanno parte dello stato di un'applicazione il testo da mostrare in un etichetta, il valore selezionato in un menu a tendina, e in generale tutti i dati necessari alla costruzione dei widget stessi.\\
+Introdotto il concetto di stato, si può affermare che \textbf{l'interfaccia utente è funzione dello stato} (riassunta dalla formula $UI = f(state)$), dove la funzione in questo caso è il metodo \texttt{build}, dalla firma \texttt{Widget build(BuildContext context)}, presente in ogni widget.\\
+A questo punto viene illustrata la differenza fra \texttt{StatelessWidget} e \texttt{StatefulWidget}:
+\begin{itemize}
+    \item uno \texttt{StatelessWidget} viene creato quando il widget ha al suo interno solo campi dati finali\footnote{Ci si riferisce alla keyword \textbf{final} dei linguaggi di programmazione quando usata per indicare un campo dati costante una volta inizializzato a runtime.}, per esempio una stringa da visualizzare stilizzata, una collezione di elementi da visualizzare sotto forma di una lista scorrevole;
+    \item uno \texttt{StatefulWidget} viene creato quando il widget può non avere campi dati finali, ovvero dispone di uno stato mutabile, per esempio un pulsante che cambia icona una volta premuto, una casella di scelta (una cosiddetta checkbox) che può variare fra lo stato binario "Selezionato/Non selezionato".
+\end{itemize}
+In precedenza è stato detto che i widget sono immutabili, come è possibile che uno \texttt{StatefulWidget} vari in base allo stato? Come è possibile farlo efficientemente senza dover distruggere il widget e crearne uno nuovo?\\
+Innanzitutto, è bene evidenziare che \texttt{StatefulWidget} non dispone propriamente del metodo \texttt{build}, ma di un altro metodo, che è \texttt{State<StatefulWidget> createState()}.
+Il metodo \texttt{createState} ritorna un'istanza di una classe che estende la classe \texttt{State}, il cui scopo è permettere la gestione dello stato del widget (è infatti in questa sottoclasse che è possibile dichiarare variabili non finali) ma al contempo anche la sua rappresentazione, perché dispone dello stato: qui si trova nuovamente il metodo \texttt{build}.\\
+Oltre al metodo \texttt{build} sono disponibili metodi per la gestione del ciclo di vita dello stato, tra cui la sua inizializzazione (\texttt{initState}), la sua modifica (\texttt{setState}), la modifica di dipendenze in ingresso (\texttt{didChangeDependencies}) ed altri.\\
+Fra tutti i metodi di \texttt{State}, il più usato è certamente \texttt{setState}: richiede come parametro una funzione da invocare (un \emph{callback}) che, una volta conclusa la sua esecuzione, permette di richiamare il metodo \texttt{build} (lo fa automaticamente \texttt{setState}), ridisegnando l'interfaccia con le modifiche effettuate dalla funzione parametro.\\
+È importante sottolineare che, ogni volta che un metodo \texttt{build} viene invocato, a cascata vengono richiamati anche i metodi \texttt{build} del widget \texttt{child} o dei widget \texttt{children}.\\
+Richiamare il metodo \texttt{build} per poter aggiornare il contenuto dell'interfaccia utente comporta la sostituzione di un widget, data la loro immutabilità.
+Ma non è così inefficiente come sembra, perché non tutto viene scartato. Il perché è presto detto.\\
+Oltre al \emph{Widget tree} ci sono due altri alberi, tutti e tre isomorfi tra loro:
+\begin{itemize}
+    \item l'\emph{Element tree}, che si occupa di gestire il collegamento fra i nodi del \emph{Widget tree} e quelli del \emph{RenderObject tree};
+    \item il \emph{RenderObject tree}, che si occupa di tutto ciò che concerne la visualizzazione a schermo (dato che non è strettamente di competenza di un \texttt{Widget}).
+\end{itemize}
+Fra i tre alberi è l'\emph{Element tree} quello con i nodi che cambiano meno frequentemente: un nodo \texttt{Element} viene distrutto solo se il widget in quella posizione dell'albero cambia completamente (ovvero se cambia il tipo dinamico e la sua chiave).
+Un nodo del \emph{Widget tree} viene sostituito (distrutto e ricreato) quando viene invocato il suo metodo \texttt{build} (sia nel caso di un \texttt{StatelessWidget} che di \texttt{StatefulWidget}). Contestualmente alla sostituzione del widget il relativo \texttt{Element} verifica che il widget sia ancora dello stesso tipo e con la stessa chiave e informa il \texttt{RenderObject} delle modifiche da apportare alla visualizzazione su schermo.

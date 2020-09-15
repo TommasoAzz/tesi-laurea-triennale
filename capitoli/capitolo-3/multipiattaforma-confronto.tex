@@ -1,0 +1,78 @@
+%**************************************************************
+\section{Framework multipiattaforma a confronto}
+\label{sec:multipiattaforma-confronto}
+
+Una volta scelto di voler realizzare un'applicazione con una tecnologia multipiattaforma (che da adesso in poi chiameremo \gls{frameworkg})  è stato necessario anche capire qual era quella più adatta agli scopi. Per questa scelta sono state tenute in considerazione:
+\begin{itemize}
+    \item linguaggio di programmazione utilizzato;
+    \item team che realizza il \gls{frameworkg} (se è realizzato da un'organizzazione solida e conosciuta è più probabile che sia stabile e ben funzionante, considerando che delle risorse stanno venendo impiegate per il suo sviluppo);
+    \item età, ovvero da quanto tempo è disponibile, poiché meno è recente più è possibile che vi sia maturità e stabilità;
+    \item performance garantite, perché sebbene in situazioni di normale utilizzo ci si aspetta che un'applicazione funzioni comunque correttamente e senza problemi, è necessario assicurarsi che anche sotto stress la reazione fornita sia buona e che non avvengano crash o malfunzionamenti per incapacità del \gls{frameworkg} in uso;
+    \item disponibilità di librerie per aggiungere funzionalità al \gls{frameworkg} (il che dipende molto dall'interesse che suscita negli sviluppatori di queste e la facilità nel loro sviluppo);
+    \item facilità di accedere alle funzionalità native del dispositivo (fotocamera, GPS, ma anche \gls{api} di sistema). 
+\end{itemize}
+Considerate queste caratteristiche, vengono di seguito elencate le tecnologie che sono state vagliate per l'utilizzo nel progetto di stage, affrontando tutti gli aspetti appena indicati.
+
+%**************************************************************
+\subsection{React Native}
+\label{subsec:react-native}
+
+\emph{React Native} è un \gls{frameworkg} rilasciato inizialmente da Facebook nel 2015 ed è mantenuto attivamente dalla comunità\footnote{Per comunità si intende la comunità open source, ovvero tutti coloro che contribuiscono ad un progetto open source.}, essendo un progetto open source.\\
+Il nome deriva dalla principale libreria impiegata nel \gls{frameworkg}, che è \emph{React}: essendo questa libreria sviluppata per essere utilizzata in progetti scritti in JavaScript, anche \emph{React Native} di conseguenza usa JavaScript.\\
+L'interfaccia grafica viene formata attraverso componenti, composte da un misto di JavaScript e un linguaggio di markup simile a HTML. Queste componenti sono però molto basiche, e quindi componenti più complesse vanno realizzate dallo sviluppatore secondo le proprie necessità.\\
+Essendo molto conosciuto come \gls{frameworkg}, trovare una libreria di terze parti che implementa una certa funzionalità desiderata, non presente all'interno dello strumento, non è un problema. Piuttosto, si rischia di dipendere troppo da queste in quanto, come detto in precedenza, le componenti base sono veramente essenziali.\\
+Nuovamente, l'accesso alle funzionalità native del dispositivo sono implementate principalmente attraverso librerie di terze parti e solo in parte da \gls{api} integrate nel \gls{frameworkg}, potendo far nascere alcuni problemi in caso queste non siano più portate avanti dai loro principali sviluppatori.\\
+Nonostante tutto, però, le performance garantite sono buone, in quanto dal codice sorgente viene prodotta una vera app con codice nativo.
+
+%**************************************************************
+\subsection{Xamarin}
+\label{subsec:xamarin}
+
+\emph{Xamarin} è un \gls{frameworkg} rilasciato inizialmente da Xamarin nel 2011, ora di proprietà di Microsoft, e mantenuto dallo stesso team e dalla comunità.\\
+È basato sul \gls{frameworkg} \emph{.NET} di Microsoft e il linguaggio che viene usato è C\#. La parte di \emph{business logic} è completamente gestita con codice C\#.\\
+L'implementazione dell'interfaccia utente dipende dalla versione dello strumento:
+\begin{itemize}
+    \item \emph{Xamarin} permette di creare interfacce grafiche native, creandole separatamente per ciascuna piattaforma di destinazione, raddoppiando di fatto il lavoro per lo sviluppatore in questa parte dell'app;
+    \item \emph{Xamarin.Forms} invece permette di scrivere dei file XAML unici, separati dalla parte di \emph{business logic}.
+\end{itemize}
+L'accesso alle funzionalità native è supportato pienamente e le performance garantite sono ancora una volta molto buone.\\
+Un'imposizione di \emph{Xamarin} è l'utilizzo dell'\gls{ide} Visual Studio, poiché tutte le fasi di sviluppo, testing, debugging e compilazione passano attraverso questo strumento.\\
+Sebbene il \gls{frameworkg} sia gratuito, Visual Studio non lo è per usi commerciali: le versioni \emph{Professional} ed \emph{Enterprise} sono a pagamento.
+
+%**************************************************************
+\subsection{Flutter}
+\label{subsec:flutter}
+
+\emph{Flutter} è un \gls{frameworkg} e un \gls{sdk} rilasciato da Google in versione stabile nel 2018 ed è mantenuto attivamente sia dal team di Google che si occupa del \gls{frameworkg} che dalla comunità.\\
+L'interfaccia grafica è formata quasi interamente da widget, di cui ne è disponibile una gamma molto vasta. Fra questi widget sono inoltre disponibili due principali macro-gruppi:
+\begin{itemize}
+    \item i widget di tipo \emph{Material}, pensati per Android perché seguono le linee guida del \emph{Material Design}\footcite{site:material-design} di Google;
+    \item i widget di tipo \emph{Cupertino}, perché emulano le componenti dell'interfaccia dei sistemi Apple (il nome \emph{Cupertino} prende spunto dalla città dove ha sede Apple).
+\end{itemize}
+È relativamente nuovo ma offre già una buona stabilità. Il linguaggio utilizzato è Dart, creato anch'esso da Google, ma che a differenza di Flutter è più maturo (rilasciato per la prima volta nel 2011) ed è mantenuto attivamente sia da Google che dalla comunità.\\
+\emph{Flutter} non è conosciuto come \emph{React Native}, ma l'interesse verso di esso è crescente, per cui sempre più sviluppatori si interessano al progetto.\\
+Tante funzionalità sono già incluse all'interno del \gls{frameworkg} stesso, altre sono disponibili come librerie esterne mantenute dallo stesso team o da quello di Dart, altre sono invece di terze parti. Le librerie vengono pubblicate in una piattaforma centralizzata chiamata \emph{Pub.dev}\footcite{site:pub-dev}, agevolando notevolmente la ricerca.\\
+L'accesso alle \gls{api} di sistema non è quindi un problema e in ogni caso è possibile colmare le mancanze utilizzando dei meccanismi per accedere al codice nativo, senza particolari problemi, comunicando attraverso i cosiddetti \emph{Platform Channel}.\\
+Una menzione degna di nota su \emph{Flutter}, nonostante non sia ancora del tutto stabile e in sviluppo attivo, è la possibilità di usare lo stesso identico \gls{frameworkg} e quindi lo stesso progetto sia per sistemi desktop come Windows, MacOS e sistemi Linux, che per siti web.\\
+Come per \emph{React Native} e \emph{Xamarin}, viene compilato codice nativo quindi le applicazioni realizzate, se ben progettate e codificate, possono essere molto fluide e reattive.
+
+%**************************************************************
+\subsection{Ionic}
+\label{subsec:ionic}
+
+\emph{Ionic} è un \gls{frameworkg} rilasciato da Ionic in versione stabile nel 2013 ed è mantenuto attivamente principalmente dal team di Ionic assieme alla comunità.\\
+A differenza dei precedenti tre, \emph{Ionic} non crea un'app nativa bensì crea una web app che viene poi eseguita in un contenitore, una cosiddetta \emph{webview}, che altro non è che un browser semplificato, permettendo infine di creare un'applicazione per dispositivi mobili.\\
+Per svolgere questo compito si serve di \emph{Apache Cordova}\footcite{site:apache-cordova} o \emph{Capacitor}\footcite{site:capacitor}.
+Offre allo sviluppatore numerose componenti già pronte da utilizzare che, usate in combinazione con numerosi \gls{frameworkg} per la creazione di applicazioni web come \emph{Angular}\footcite{site:angular} ad esempio, permettono di creare applicazioni anche molto complesse.\\
+Producendo sostanzialmente una web-app i linguaggi a disposizione per lo sviluppatore sono HTML, CSS e JavaScript.\\
+Come ulteriore conseguenza di ciò, tutte le librerie disponibili per JavaScript e per le tre tecnologie sopracitate sono utilizzabili anche in questo contesto.\\
+L'accesso alle \gls{api} di sistema è permesso grazie ad \emph{Apache Cordova} e \emph{Capacitor}, servendosi di librerie che fanno da involucro alle funzionalità native. In caso ci siano funzionalità mancanti, è possibile crearle e aggiungerle al proprio \gls{codebaseg}.\\
+In quanto web app, la sua velocità è all'incirca quella che ci si può aspettare da un sito web, di conseguenza se un obiettivo del prodotto è avere buone performance anche in situazioni di stress, \emph{Ionic} non è la scelta migliore.
+
+%**************************************************************
+\subsection{Web app}
+\label{subsec:web-app}
+
+Un'altra possibile vagliata è stata quella di realizzare una web app. Quanto detto per \emph{Ionic} segue anche per la web app, in quanto è quello che viene prodotto anche per esso.\\
+La differenza principale starebbe nell'accesso alle funzionalità native del dispositivo, che dovrebbero passare attraverso la gestione del browser in uso e inoltre, per motivi di sicurezza, non tutte potrebbero essere disponibili.
+Infine, l'applicazione andrebbe comunque rilasciata attraverso un dominio disponibile in rete oppure inserita in un contenitore come la precedentemente citata \emph{webview}.

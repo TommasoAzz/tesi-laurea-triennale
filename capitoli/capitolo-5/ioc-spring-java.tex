@@ -1,0 +1,78 @@
+%**************************************************************
+\section{Inversion of Control: il framework Spring in Java}
+\label{sec:ioc-spring-java}
+
+\emph{Spring} è uno dei \gls{frameworkg} più conosciuti ed usati per sviluppare software in Java. È diviso in tanti progetti più piccoli ma che hanno tutti alla base un efficiente meccanismo di \gls{dig} attraverso l'\emph{Inversion of Control}.\\
+L'\emph{Inversion of Control (talvolta abbreviato in IoC)} è un meccanismo che permette di migliorare ancora di più l'idea alla base della \gls{dig}, che consiste nel tenere il comportamento di una classe separato dalla risoluzione delle sue dipendenze, avendo un contenitore che gestisce autonomamente questo meccanismo.\\
+Il compito di uno sviluppatore resta quello di dichiarare le dipendenze, dove necessarie, e registrare, attraverso dei meccanismi definiti dal \gls{frameworkg}, come permettere di ottenerle.\\
+Al collegamento fra le dipendenze stesse e le classi che invece le richiedono ci pensa il meccanismo di \emph{IoC}.\\
+
+%**************************************************************
+\subsection{Creazione di una dipendenza}
+\label{subsec:creazione-dipendenza-spring}
+
+In \emph{Spring} ci sono vari modi per dichiarare al meccanismo di \emph{IoC} che un'istanza di una classe deve essere usata come dipendenza. Di seguito vengono mostrati i due principali, gli altri derivano da questi.
+
+%**************************************************************
+\subsubsection{Utilizzo di POJO: l'annotazione @Bean}
+\label{subsubsec:utilizzo-pojo-annotazione-bean-spring}
+
+Il primo modo che è disponibile per creare una dipendenza è usando l'annotazione di \emph{Spring} \texttt{@Bean}. Tipicamente questo metodo è utilizzato per ritornare oggetti singoli che vengono istanziati agevolmente all'interno di un metodo (i cosiddetti \gls{pojo}), come configurazioni di librerie o di altre parti dell'applicazione.\\
+\begin{lstlisting}
+class XYZ {
+    ...
+    @Bean
+    public Dipendenza getDipendenza() {
+        return new Dipendenza();
+    }
+}
+\end{lstlisting}
+Facendo riferimento all'esempio appena presentato, marchiando un'istanza o un metodo di una classe (che deve essere sotto il controllo di \emph{Spring}, nel prossimo esempio viene spiegato come) con \texttt{@Bean}, il meccanismo di \emph{IoC} si salva il riferimento all'istanza ritornata dal metodo \texttt{getDipendenza} e, quando deve istanziare un oggetto che la richiede, gliela passa come argomento.
+
+%**************************************************************
+\subsubsection{Utilizzo di classi: l'annotazione @Component}
+\label{subsubsec:utilizzo-classi-annotazione-component-spring}
+
+Un altro modo, e da questo ne derivano altri del tutto simili, è marchiare una classe con l'annotazione \texttt{@Component}.
+Le differenze con gli altri sono riconducibili all'annotazione usata: \texttt{@Controller}, \texttt{@RestController}, \texttt{@Service} e \texttt{@Configuration}.
+Tutte le annotazioni elencate aiutano il \gls{frameworkg} nel lavoro di risoluzione delle dipendenze, ma hanno di fondo lo stesso funzionamento.
+
+\begin{lstlisting}
+@Component
+class Dipendenza {
+    ...
+}
+\end{lstlisting}
+In questo modo, quando una classe o un metodo richiedono una dipendenza di tipo \texttt{Dipendenza}, il meccanismo di \emph{IoC} crea un'istanza di questa classe e la passa come argomento.
+
+%**************************************************************
+\subsection{Richiesta di una dipendenza}
+\label{subsec:richiesta-dipendenza-spring}
+
+Il modo per informare il meccanismo di \emph{IoC} di necessitare di una dipendenza è utilizzando una delle due annotazioni \texttt{@Autowired} o \texttt{@Inject}.
+\begin{lstlisting}
+class Ricevente {
+    @Autowired
+    private Dipendenza nonDichiarata;
+
+    private Dipendenza dichiarata;
+
+    @Autowired
+    public Ricevente(Dipendenza dipendenza) {
+        dichiarata = dipendenza;
+    }
+}
+\end{lstlisting}
+In questo esempio vengono mostrati due modi per ottenere la risoluzione della dipendenza:
+\begin{itemize}
+    \item il primo, corrispondente alla variabile \texttt{nonDichiarata}, è ottenere la dipendenza senza dichiararla.
+    È assolutamente uguale al successivo, ma non dichiarandola nel costruttore o in un setter, è più facile da dimenticare (per esempio, in fase di testing);
+    \item la seconda, corrispondente alla variabile \texttt{dichiarata}, è ottenere la dipendenza dal costruttore, facendo quella che viene chiamata \emph{constructor injection}.
+\end{itemize}
+
+%**************************************************************
+\subsection{Osservazioni sul procedimento}
+\label{subsec:osservazioni-procedimento-spring}
+
+Questo è quanto è necessario fare per la \gls{dig} in \emph{Spring}. Un'eccezione è fatta per il punto di ingresso, ovvero la classe con il metodo \texttt{main}, che va annotata con \texttt{@SpringBootApplication} (ma che è automaticamente incluso alla generazione di un nuovo progetto).
+

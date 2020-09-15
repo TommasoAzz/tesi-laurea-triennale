@@ -1,0 +1,37 @@
+% !TEX encoding = UTF-8
+% !TEX TS-program = pdflatex
+% !TEX root = ../tesi.tex
+
+%**************************************************************
+% Sommario
+%**************************************************************
+\cleardoublepage
+\phantomsection
+\pdfbookmark{Sommario}{Sommario}
+\begingroup
+\let\clearpage\relax
+\let\cleardoublepage\relax
+\let\cleardoublepage\relax
+
+\chapter*{Sommario}
+
+Il presente documento descrive il lavoro svolto durante il periodo di stage, della durata di circa trecento ore, dal laureando \myName{} presso l'azienda \myCompany{}\\
+L'obiettivo dello stage è stato realizzare un’applicazione mobile multipiattaforma (per sistemi operativi Android e iOS) per la gestione di impianti semaforici (e altre componenti per la regolazione del traffico) che:
+\begin{itemize}
+    \item[-] si basasse sull'applicazione già in uso presso l'azienda, implementata per solo sistema operativo Android;
+    \item[-] si interfacciasse con un web server tramite API REST permettendo il reperimento dei dati da visualizzare all’utente e la loro modifica;
+    \item[-] si attivasse autonomamente in background con intervalli di tempi predefiniti per verificare la presenza di nuovi dati per l’utente.
+\end{itemize}
+
+%\vfill
+%
+%\selectlanguage{english}
+%\pdfbookmark{Abstract}{Abstract}
+%\chapter*{Abstract}
+%
+%\selectlanguage{italian}
+
+\endgroup			
+
+\vfill
+

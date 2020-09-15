@@ -1,0 +1,20 @@
+%**************************************************************
+\subsubsection{Package it.tecsen.smacs.utils}
+\label{subsubsec:it-tecsen-smacs-utils}
+
+\begin{figure}[!h]
+  \centering 
+  \includegraphics[width=1.0\columnwidth]{capitolo-6/organizzazione-package/utils} 
+  \caption{Diagramma del package \texttt{it.tecsen.smacs.utils}}
+\end{figure}
+In questi package ci sono strumenti di utilità creati per evitare di duplicare quanto più possibile codice.\\
+Ogni classe ha il suo scopo, riassunto di seguito:
+\begin{itemize}
+  \item \texttt{CryptoUtils} include metodi per la cifratura di stringhe;
+  \item \texttt{DateUtils} include metodi per ottenere date formattate in più modi;
+  \item \texttt{FileIO} è un \emph{mixin} che viene utilizzato per memorizzare su file alcuni dati dell'applicazione dalle classi del package \texttt{it.tecsen.smacs.model.repository};
+  \item \texttt{UuidUtils} include metodi per la codifica e la decodifica di \gls{uuid};
+  \item \texttt{FutureUtils} include metodi per l'esecuzione sicura di funzioni che ritornano istanze di tipo \texttt{Future};
+  \item \texttt{SynopticUtils} include metodi per la codifica e la decodifica di dati ottenuti dalle \gls{restg} per la visualizzazione dei dati del sinottico (casi d'uso UC04 e UC05);
+  \item \texttt{UiUtils} include metodi di utilità generici per la creazione dell'interfaccia grafica.
+\end{itemize}

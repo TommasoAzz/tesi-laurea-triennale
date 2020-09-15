@@ -1,0 +1,165 @@
+%**************************************************************
+\section{Casi d'uso}
+\label{sec:casi-uso}
+
+I casi d'uso studiati per il prodotto sono stati realizzati sotto forma testuale, per una spiegazione dettagliata, e sotto forma di diagrammi.
+Ciascuno testo descrittivo di un caso d'uso ne indica:
+\begin{itemize}
+    \item il \emph{codice identificativo}, nella forma $UCx.y.z$ con $x$, $y$ e $z$ numeri naturali;
+    \item il \emph{nome}, che introduce brevemente il contesto applicativo del caso d'uso;
+    \item gli \emph{attori principali} e \emph{attori secondari} (quest'ultimi se presenti), rispettivamente coloro che compiono l'azione indicata nel caso d'uso e coloro che invece aiutano a raggiungere le post-condizioni;
+    \item lo \emph{scenario principale}, ovvero cosa può compiere l'utente con questo caso d'uso;
+    \item le \emph{precondizioni}, ovvero lo stato del sistema antecedente l'esecuzione della funzionalità descritta;
+    \item le \emph{postcondizioni}, ovvero lo stato del sistema alla fine dell'esecuzione della funzionalità descritta;
+    \item le \emph{estensioni} (se presenti), ovvero una lista di casi d'uso che possono verificarsi sotto determinate condizioni che non permettono di raggiungere le postcondizioni indicate dal caso d'uso d'origine;
+    \item le \emph{generalizzazioni} (se presenti), ovvero una lista di casi d'uso di cui il caso d'uso è implementazione più dettagliata.
+\end{itemize}
+I diagrammi dei casi d'uso (in inglese \emph{Use Case Diagram}) sono diagrammi realizzati in \gls{uml} dedicati alla descrizione delle funzioni o servizi offerti da un sistema, così come sono percepiti e utilizzati dagli attori che interagiscono col sistema stesso.
+
+\begin{figure}[!h] 
+    \centering 
+    \includegraphics[width=1.0\columnwidth]{appendice-A/utente-non-autenticato} 
+    \caption{SMacs - Casi d'uso dell'utente non autenticato}
+\end{figure}
+
+\input{capitoli/appendice-A/casi-uso/uc01}
+
+\input{capitoli/appendice-A/casi-uso/uc02}
+
+% sicurezza che prenda tutto lo spazio disponibile
+\clearpage
+
+\begin{figure}[!h] 
+    \centering 
+    \includegraphics[height=0.94\textheight]{appendice-A/utente-autenticato} 
+    \caption{SMacs - Casi d'uso dell'utente autenticato}
+\end{figure}
+
+\input{capitoli/appendice-A/casi-uso/uc03}
+
+\input{capitoli/appendice-A/casi-uso/uc04}
+
+\input{capitoli/appendice-A/casi-uso/uc05}
+
+\input{capitoli/appendice-A/casi-uso/uc06}
+
+\input{capitoli/appendice-A/casi-uso/uc07}
+
+\input{capitoli/appendice-A/casi-uso/uc08}
+
+\input{capitoli/appendice-A/casi-uso/uc09}
+
+\input{capitoli/appendice-A/casi-uso/uc10}
+
+\input{capitoli/appendice-A/casi-uso/uc11}
+
+\input{capitoli/appendice-A/casi-uso/uc12}
+
+\input{capitoli/appendice-A/casi-uso/uc13}
+
+\input{capitoli/appendice-A/casi-uso/uc14}
+
+\input{capitoli/appendice-A/casi-uso/uc15}
+
+% \section{Tracciamento dei requisiti}
+
+% Da un'attenta analisi dei requisiti e dei casi d'uso effettuata sul progetto è stata stilata la tabella che traccia i requisiti in rapporto ai casi d'uso.\\
+% Sono stati individuati diversi tipi di requisiti e si è quindi fatto utilizzo di un codice identificativo per distinguerli.\\
+% Il codice dei requisiti ha la forma $R\alpha{}x$ con $x$ numero naturale progressivo mentre $\alpha$ può essere:
+% \begin{itemize}
+%     \item F, che indica un requisito funzionale e obbligatorio, ovvero che implementa una funzionalità obbligatoria per il corretto funzionamento e completamento del prodotto;
+%     \item D, che indica nuovamente un requisito funzionale ma desiderabile, ovvero che implementa una funzionalità che offre valore aggiunto ma che senza il prodotto può comunque portare a termine gli obiettivi per cui è stato creato;
+%     \item Z, che indica ancora una volta un requisito funzionale però opzionale, ovvero che offre valore aggiunto ma che è subordinato dalla realizzazione degli altri requisiti, ed è quindi di inferiore importanza;
+%     \item Q, che indica un requisito qualitativo, ovvero che garantisce un corretto funzionamento del prodotto secondo le attese dell'utente e degli stakeholder;
+%     \item V, che indica un requisito vincolante per la buona riuscita del progetto e del prodotto, senza il cui completamento il prodotto non può ritenersi concluso.
+% \end{itemize}
+% Nelle tabelle \ref{tab:requisiti-funzionali}, \ref{tab:requisiti-qualitativi} e \ref{tab:requisiti-vincolo} sono riassunti i requisiti e il loro tracciamento con i casi d'uso delineati in fase di analisi.
+
+% \newpage
+
+% \begin{table}%
+% \caption{Tabella del tracciamento dei requisiti funzionali}
+% \label{tab:requisiti-funzionali}
+% \begin{tabularx}{\textwidth}{lXl}
+% \hline\hline
+% \textbf{Requisito} & \textbf{Descrizione} & \textbf{Use Case}\\
+% \hline
+% RF01 & Viene visualizzata la schermata iniziale dell'applicazione quando l'utente non autenticato accede all'applicazione. & UC01 \\
+% RF02 & Quando l'utente non autenticato si trova nella schermata iniziale dell'applicazione viene visualizzato il link per accedere al sito web dell'azienda. & UC01.1 \\
+% RF03 & Quando l'utente non autenticato si trova nella schermata iniziale dell'applicazione viene visualizzato il modulo per contattare il servizio clienti. & UC01.2 \\
+% RF04 & Quando l'utente non autenticato si trova nella schermata iniziale dell'applicazione viene visualizzato il link per accedere al sito web dell'azienda di cui è partner. & UC01.3 \\
+% RF05 & Quando l'utente non autenticato si trova nella schermata iniziale dell'applicazione viene visualizzato la funzionalità di accesso alla schermata di autenticazione. & UC01.4 \\
+% RF06 & L'utente non autenticato può autenticarsi presso il sistema. & UC02 \\
+% RF07 & L'utente non autenticato può inserire il nome del server a cui connettersi. & UC02.1 \\
+% RF08 & L'utente non autenticato può inserire il proprio nome utente per connettersi al sistema. & UC02.2 \\
+% RF09 & L'utente non autenticato può inserire la propria password per connettersi al sistema. & UC02.3 \\
+% RF10 & Se l'utente non autenticato si è dimenticato la propria password può accedere alla pagina web per contattare il servizio clienti. & UC02.4 \\
+% RF11 & Se l'utente non autenticato ha inserito un server che non è valido viene visualizzato un messaggio di errore. & UC02.5 \\
+% RF12 & Se l'utente non autenticato ha inserito delle credenziali che non sono valide viene visualizzato un messaggio di errore. & UC02.6 \\
+% RF13 & L'utente autenticato può visionare la lista dei dispositivi di cui ha il permesso di gestione. & UC03 \\
+% RF14 & L'utente autenticato può visionare un elemento della lista dei dispositivi comprensivo di un dettaglio compatto. & UC03.1 \\
+% RF15 & L'utente autenticato è notificato quando la lista dei dispositivi di cui ha il permesso di gestione è vuota. & UC03.2 \\
+% RF16 & L'utente autenticato può visionare la lista dei dispositivi di cui ha il permesso di gestione in ordine alfabetico. & UC03.3 \\
+% RF17 & L'utente autenticato può visionare la lista dei soli dispositivi di cui ha il permesso di gestione che hanno segnalazioni (di malfunzionamento). & UC03.4 \\
+% RF18 & L'utente autenticato può visionare la lista dei dispositivi entro il raggio di 1 Km dalla propria posizione di cui ha il permesso di gestione. & UC03.5 \\
+% RF19 & L'utente autenticato può visionare la lista dei dispositivi filtrati in base a una ricerca testuale di cui ha il permesso di gestione. & UC03.6 \\
+% RF20 & L'utente autenticato può aggiornare la lista dei dispositivi di cui ha il permesso di gestione ottenendone una nuova copia dal sistema. & UC03.7 \\
+% RF21 & L'utente autenticato può ottenere informazioni dettagliate sullo stato di un regolatore semaforico. & UC04 \\
+% RF22 & L'utente autenticato può ottenere informazioni sulla massima gravità fra i messaggi di diagnostica attivi nel dispositivo. & UC04.1 \\
+% RF23 & L'utente autenticato può ottenere informazioni sullo stato del regolatore semaforico (funzione, livello). & UC04.2 \\
+% RF24 & L'utente autenticato può ottenere informazioni sullo stato dei gruppi semaforici del regolatore semaforico. & UC04.3 \\
+% RF25 & L'utente autenticato può ottenere informazioni sullo stato degli input presenti nel regolatore semaforico. & UC04.4 \\
+% RF26 & L'utente autenticato può ottenere la data in cui è avvenuto l'ultimo aggiornamento dei dati del regolatore semaforico. & UC04.5 \\
+% RF27 & L'utente autenticato può ottenere i messaggi di diagnostica presenti nel regolatore semaforico. & UC04.6 \\
+% RF28 & L'utente autenticato può aggiornare lo stato del regolatore semaforico. & UC04.7 \\
+% RF29 & L'utente autenticato può visionare il sinottico del regolatore semaforico. & UC05 \\
+% RF30 & L'utente autenticato può gestire il dettaglio tecnico sul regolatore semaforico. & UC06 \\
+% RF31 & L'utente autenticato può ottenere delle informazioni hardware e software delle componenti del regolatore semaforico. & UC06.1 \\
+% RF32 & L'utente autenticato può ottenere informazioni sulla modalità di connessione attiva nel dispositivo. & UC06.2 \\
+% RF33 & L'utente autenticato può ottenere informazioni sulle impostazioni DDNS del dispositivo. & UC06.3 \\
+% RF34 & L'utente autenticato può aggiornare il dettaglio tecnico del regolatore semaforico. & UC06.4 \\
+% RF35 & L'utente autenticato può inserire delle note sul dettaglio tecnico del regolatore semaforico. & UC06.5 \\
+% RF36 & L'utente autenticato può gestire il regolatore semaforico. & UC07 \\
+% RF37 & L'utente autenticato può modificare la funzione corrente del regolatore semaforico. & UC07.1 \\
+% RF38 & L'utente autenticato può modificare il piano corrente del regolatore semaforico. & UC07.2 \\
+% RF39 & L'utente autenticato può resettare gli allarmi del regolatore semaforico. & UC07.3 \\
+% RF40 & L'utente autenticato può inserire la propria password per confermare le modifiche ai dati del regolatore semaforico. & UC07.4 \\
+% RF41 & Se l'utente autenticato ha inserito la password e non corrisponde alla propria viene visualizzato un messaggio di errore. & UC07.4.1 \\
+% RF42 & L'utente autenticato può visionare la lista degli eventi del regolatore semaforico. & UC08 \\
+% RF43 & L'utente autenticato può visionare un singolo evento della lista. & UC08.1 \\
+% RF44 & L'utente autenticato può modificare la data di cui vedere gli eventi del regolatore semaforico. & UC08.2 \\
+% RF45 & L'utente autenticato può aggiornare la lista degli eventi del regolatore semaforico. & UC08.3 \\
+% RF46 & L'utente autenticato può visionare il foglio contenente informazioni sul dispositivo. & UC09 \\
+% RF47 & L'utente autenticato può visionare la posizione geografica del regolatore semaforico. & UC10 \\
+% RF48 & L'utente autenticato può visionare un testo riassuntivo sullo stato dei dispositivi previa ricezione di una notifica. & UC11 \\
+% RF49 & L'utente autenticato può gestire l'intervallo di aggiornamento dati. & UC12 \\
+% RF50 & L'utente autenticato può visionare le informazioni sull'app. & UC13 \\
+% RF51 & L'utente autenticato può gestire la modalità di debug. & UC14 \\
+% RF52 & L'utente autenticato può effettuare il logout dal sistema. & UC15 \\
+% \hline
+% \end{tabularx}
+% \end{table}%
+
+% \begin{table}%
+% \caption{Tabella del tracciamento dei requisiti qualitativi}
+% \label{tab:requisiti-qualitativi}
+% \begin{tabularx}{\textwidth}{lXl}
+% \hline\hline
+% \textbf{Requisito} & \textbf{Descrizione} & \textbf{Use Case}\\
+% \hline
+% RQD-1    & Le prestazioni del simulatore hardware deve garantire la giusta esecuzione dei test e non la generazione di falsi negativi & - \\
+% \hline
+% \end{tabularx}
+% \end{table}%
+
+% \begin{table}%
+% \caption{Tabella del tracciamento dei requisiti di vincolo}
+% \label{tab:requisiti-vincolo}
+% \begin{tabularx}{\textwidth}{lXl}
+% \hline\hline
+% \textbf{Requisito} & \textbf{Descrizione} & \textbf{Use Case}\\
+% \hline
+% RVO-1    & La libreria per l'esecuzione dei test automatici deve essere riutilizzabile & - \\
+% \hline
+% \end{tabularx}
+% \end{table}%

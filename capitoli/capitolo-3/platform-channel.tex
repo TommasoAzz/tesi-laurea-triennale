@@ -1,0 +1,11 @@
+%**************************************************************
+\section{I Platform channel: come interagire con il linguaggio nativo}
+\label{sec:platform-channel}
+Può capitare che una certa funzionalità richiesta dall'applicazione che si sta sviluppando in \emph{Flutter} non sia disponibile ne' all'interno del \gls{frameworkg} ne' in una libreria di terze parti.\\
+In questi casi \emph{Flutter} offre un modo per poter implementare la propria funzionalità nel linguaggio nativo del sistema di riferimento, Java/Kotlin per Android e Objective-C/Swift per iOS, e renderla disponibile nel proprio \gls{codebaseg}: i \emph{Platform Channel}.\\
+Un \emph{Platform Channel} non è altro che un canale attraverso cui Dart può comunicare con il linguaggio nativo in maniera asincrona.\\
+Dalla parte di Dart tutto ciò che è necessario fare è istanziare un oggetto di tipo \texttt{MethodChannel}\footnote{Il meccanismo che permette la comunicazione è chiamato Platform Channel, da non confondere con la classe in uso che è MethodChannel.} e nel costruttore indicare il nome del canale attraverso cui comunicare (una stringa).\\
+Dalla parte nativa va nuovamente istanziato un oggetto di tipo \texttt{MethodChannel} (il nome coincide, ma l'implementazione è diversa) specificando ancora una volta il nome del canale (che deve corrispondere a quello usato in Dart) e registrando un \emph{callback} da invocare ogni qualvolta che viene comunicato attraverso il \emph{Platform Channel}.\\
+Per usare il \emph{Platform Channel}, in Dart va chiamato il metodo \texttt{invokeMethod} dell'istanza di \texttt{MethodChannel} che ha come parametro il nome del "metodo"\footnote{La parola metodo viene virgolettata perché, sebbene nella parte nativa è possibile avere metodi che si chiamano come la stringa passata come argomento a \texttt{invokeMethod}, non è obbligatorio. Tutto quello che fa il callback è controllare il valore dell'argomento ricevuto da Dart (tramite if-else o switch, per esempio) e eseguire delle istruzioni conseguentemente.} nativo da invocare.\\
+Nella parte nativa vanno registrati, all'interno del \emph{callback} già citato, tutti i "metodi" che sono disponibili per essere invocati attraverso Dart.
+Ogni qualvolta che viene eseguito il \emph{callback} viene eseguito il corrispondente "metodo".

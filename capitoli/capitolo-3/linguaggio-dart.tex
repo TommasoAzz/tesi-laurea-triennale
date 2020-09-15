@@ -1,0 +1,166 @@
+%**************************************************************
+\section{Dart, il linguaggio usato in Flutter}
+\label{sec:linguaggio-dart}
+
+Dart è il linguaggio che viene utilizzato da \emph{Flutter} nelle librerie del \gls{frameworkg}, nella parte di visualizzazione dei widget a schermo e anche nella parte di business logic.
+
+%**************************************************************
+\subsection{Caratteristiche del linguaggio}
+\label{subsec:caratteristiche-linguaggio}
+
+Dart è un linguaggio orientato agli oggetti e fortemente tipato. Nonostante sia fortemente tipato è possibile fare l'inferenza di tipo, quindi:
+\begin{lstlisting}
+var numero = 5;
+int numero = 5;
+\end{lstlisting}
+sono istruzioni equivalenti ed entrambe hanno tipo statico e dinamico \texttt{int}.\\
+Ogni variabile è un riferimento ad un oggetto, anche i numeri, le funzioni e \texttt{null} (simile a quanto avviene nei linguaggi che usano la Java Virtual Machine).
+Tutti i tipi ereditano dal tipo base \texttt{Object}.\\
+Esiste un tipo speciale, \texttt{dynamic}, che segnala al compilatore che non si è a conoscenza del tipo dinamico della variabile (il tipo statico è invece \texttt{dynamic}) e che può essere un tipo qualsiasi.\\
+Sono disponibili le procedure e le routine (le cosiddette funzioni, slegate dal concetto di classe), come in C/C++ e JavaScript, a differenza di Java. Il punto di ingresso di un programma scritto in Dart (e di un'applicazione con \emph{Flutter}) è la funzione \texttt{void main()}.
+
+%**************************************************************
+\subsubsection{Classi e oggetti}
+\label{subsubsec:classi-oggetti}
+
+Oltre a quanto già affermato, in Dart esistono solo due modificatori di accesso: \emph{public} e \emph{private}.\\
+Un campo dati o un metodo di una classe sono pubblici di default (non esiste una keyword \emph{public} o una con lo stesso significato).\\
+Per indicare che un campo dati o un metodo è privato il suo identificatore deve cominciare con \textbf{\_} (trattino basso) (anche in questo caso, non esiste una keyword \emph{private} o una con lo stesso significato).\\
+Non esisto il concetto di \emph{protected}.\\
+Gli stessi concetti di modificatori di accesso si applicano anche ai nomi delle classi e delle funzioni in un file, quindi se una classe o una funzione è pubblica lo sarà ovunque; se è privata lo sarà ovunque tranne che nel file in cui è specificata.\\
+
+%**************************************************************
+\subsubsection{Subtyping}
+\label{subsubsec:subtyping}
+
+Una classe in Dart può essere \textbf{concreta} oppure \textbf{astratta} (ovvero non istanziabile perché definita a livello di classe o perché dispone di metodi non implementati).\\
+Una classe viene dichiarata esattamente come in molti altri linguaggi:
+\begin{lstlisting}
+class NomeClasse {
+    // Definizione campi dati.
+    ...
+    // Definizione metodi.
+    ...
+}
+\end{lstlisting}
+Se la classe è astratta è sufficiente indicare \texttt{abstract class} al posto di \texttt{class}.\\
+Un metodo senza implementazione (astratto) non ha alcuna keyword che lo identifica: semplicemente, invece di specificare il corpo del metodo fra parentesi graffe (o con la \emph{arrow annotation}, \texttt{=>}, per corpi di funzione con una singola istruzione) si termina la definizione del metodo con un punto e virgola.\\
+Il concetto di \textbf{interfaccia} è presente, ma non come in linguaggi come Java: in Dart \textbf{ogni classe definisce implicitamente un'interfaccia}, per cui una classe può essere indifferentemente ereditata e/o implementata.
+
+%**************************************************************
+\subsubsection{Mixin}
+\label{subsubsec:mixin}
+
+I \textbf{mixin} sono delle classi che contengono metodi usabili da altre classi senza dover essere una loro superclasse. Sono a tutti gli effetti delle classi concrete dal punto di vista dell'implementazione (tutti i metodi sono implementati e c'è la possibilità di avere dei campi dati) ma non possono essere istanziati direttamente. Possono invece essere integrati nella definizione di altre classi tramite la keyword \texttt{with}.\\
+Un esempio di definizione ed uso di un mixin è il seguente:
+\begin{lstlisting}
+mixin NomeMixin {
+  // Definizione campi dati.
+  ...
+
+  // Definizione metodi.
+  void metodoDelMixin() {
+    ...
+  }
+  ...
+}
+
+class NomeClasseConMixin with NomeMixin {
+    // Definizione campi dati.
+    ...
+
+    // Definizione metodi.
+    void metodo() {
+        metodoDelMixin();
+        ...
+    }
+    ...
+}
+\end{lstlisting}
+
+%**************************************************************
+\subsubsection{Supporto a programmazione asincrona}
+\label{subsubsec:supporto-programmazione-asincrona}
+
+Gran parte delle operazioni che richiedono di operare con I/O (file, rete, ecc.), eseguire calcoli complessi o eseguire operazioni che non possono/riescono ritornare immediatamente, sono asincrone.\\
+L'asincronia in Dart è rappresentata da due tipi principali:
+\begin{itemize}
+    \item \texttt{Stream}, che rappresenta un "flusso" a cui ci si deve mettere in ascolto per ottenerne i dati (è molto simile agli stream delle \emph{Stream API} in Java) che potrebbero presentarsi in successione;
+    \item \texttt{Future}, che rappresenta dati che "verranno ritornati in futuro" (dove per "in futuro" si intende che il tempo impiegato può essere più o meno lungo e non è possibile assumerne la durata) una volta sola.
+\end{itemize}
+Di seguito è mostrata una correlazione fra Future e Stream, asincroni, e la loro corrispondente versione sincrona:
+{
+\renewcommand{\arraystretch}{1.5}
+\begin{longtable}{|c|c|c|}
+    \hline
+    -                       & \textbf{Sincrono}      & \textbf{Asincrono}   \\\hline
+    \endhead
+    \textbf{Valore singolo} & \texttt{int}           & \texttt{Future<int>} \\\hline
+    \textbf{Collezione}     & \texttt{Iterable<int>} & \texttt{Stream<int>} \\\hline
+    \caption{Correlazione fra campi dati sincroni e asincroni}
+\end{longtable}
+}
+Una funzione (o metodo) che ritorna \texttt{Future} o \texttt{Stream} non viene subito eseguita, ne viene solamente registrata la richiesta di esecuzione e espletata non appena possibile.
+Affinché si sappia quali operazioni eseguire una volta che l'operazione asincrona è stata eseguita va registrato un \emph{callback} tramite il metodo \texttt{then} (per \texttt{Future}) e \texttt{listen} (per \texttt{Stream}).\\
+Per evitare di registrare \emph{callback} sono presenti due keyword, \texttt{async} (da indicare nella dichiarazione di un metodo) e \texttt{await} (da indicare prima dell'espressione che invoca un metodo asincrono). Queste due keyword permettono di mantenere l'aspetto asincrono ma al contempo di rendere molto più leggibile il codice sorgente.\\
+Di seguito viene mostrato un esempio di utilizzo di \texttt{Future} registrando un \emph{callback}:
+\begin{lstlisting}
+void fun() {
+  // Creazione di un riferimento a una computazione
+  // che termina in futuro.
+  Future<int> myFutureWithCallback = futureOperation();
+
+  // Registrazione di un callback che viene invocato
+  // al completamento del futuro.
+  myFuture.then((intValue) {
+    // Eseguito dopo, quando futureOperation
+    // ha finito la sua computazione.
+    print("Stampato dopo. " + intValue);
+  });
+
+  print("Stampato prima.");
+}
+\end{lstlisting}
+Il successivo esempio mostra invece l'utilizzo di \texttt{Future} con \texttt{async}/\texttt{await}. Per poterli paragonare, viene riadattato l'esempio precedente:
+\begin{lstlisting}
+void fun() async {
+  // Creazione di un riferimento a una computazione
+  // che termina in futuro.
+  Future<int> myFutureWithCallback = await futureOperation();
+    
+  print("Stampato prima.");
+  print("Stampato dopo " + intValue);
+
+}
+\end{lstlisting}
+Entrambi gli esempi stamperanno "Stampato prima. Stampato dopo." seguiti dal numero intero ritornato da \texttt{futureOperation}.
+
+%**************************************************************
+\subsection{Compilazione ed esecuzione}
+\label{subsec:compilazione-esecuzione}
+
+Una volta aver discusso su alcune caratteristiche tecniche del linguaggio, è bene approfondire come Dart può essere compilato ed eseguito.\\
+È già stato affermato che Dart può essere sia interpretato che compilato, tutto questo attraverso lo stesso \gls{sdk}.
+Le possibilità offerte sono quattro:
+\begin{itemize}
+    \item Dart Native, che può interpretare e/o compilare codice Dart per dispositivi mobili (quello che è stato fatto per lo stage) ma anche desktop;
+    \item Dart Web, che può interpretare e/o compilare codice Dart per web (ovvero generare JavaScript).
+\end{itemize}
+
+%**************************************************************
+\subsubsection{Dart Native}
+\label{subsubsec:dart-native}
+
+Questa parte dell'\gls{sdk} si occupa della generazione di codice eseguibile per dispositivi mobili e/o desktop (per questo motivo si parla di "native").\\
+Ad occuparsi di questo compito è la \emph{Dart VM} che, un po' come la JVM per Java, esegue al suo interno il codice Dart.\\
+La \emph{Dart VM} è in grado di interpretare Dart tramite un compilatore \gls{jit} e viene usato in fase di debugging perché decisamente più veloce di una normale compilazione.
+Inoltre, permette di supportare l'\emph{Hot Reload} e l'\emph{Hot Restart} di \emph{Flutter}.\\
+In fase di rilascio dell'applicazione il codice non viene interpretato ma compilato dal compilatore \emph{Dart AOT} che compila, come dice il nome, \gls{aot}.
+Il codice compilato viene poi eseguito all'interno di un runtime che include, tra l'altro, il garbage collector.
+
+%**************************************************************
+\subsubsection{Dart Web}
+\label{subsubsec:dart-web}
+Questa parte dell'\gls{sdk} si occupa della generazione di codice eseguibile per browser (per questo motivo si parla di "web").\\
+Ci sono ancora una volta due strumenti, uno per l'interpretazione del codice sorgente durante il debugging e un altro per generare codice JavaScript.\\
+Il primo strumento si chiama \emph{dartdevc}, ed è paragonabile alla \emph{Dart VM}. Il secondo si chiama \emph{dart2js} ed è invece l'equivalente del compilatore \emph{Dart AOT}.

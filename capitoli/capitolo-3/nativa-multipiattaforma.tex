@@ -1,0 +1,16 @@
+%**************************************************************
+\section{Applicazione nativa o multipiattaforma?}
+\label{sec:nativa-multipiattaforma}
+
+Nonostante il titolo di questa relazione citi \emph{Sviluppo di un'app multipiattaforma}, la scelta di realizzare un'app multipiattaforma è stata presa dopo aver valutato tutti i vantaggi che questa scelta avrebbe potuto portare.
+Come è dichiarato nella sezione "\hyperref[sec:requisiti-obiettivi-finali]{Requisiti e obiettivi finali}", l'azienda dispone già di un'applicazione Android e quindi, quando si è discusso del progetto da realizzare per lo stage, è stato proposto di realizzare la sua controparte per iOS.\\
+Sviluppare per iOS, ovvero realizzare un'app nativa, ha chiaramente i vantaggi derivati dallo sviluppo proprio per la piattaforma di destinazione, che per lo sviluppatore corrispondono all'accesso diretto a funzionalità del sistema operativo e a una vasta disponibilità di librerie di terze parti, permettendo la creazione di app fluide che possono usare tutte le componenti native offerte direttamente dal sistema operativo.\\
+D'altra parte, però, significa apprendere una tecnologia nuova, che è sempre un vantaggio, ma limitata a quel solo scopo.\\
+Un altro svantaggio non banale nell'avere un'applicazione sviluppata separatamente per due sistemi diversi è la necessità di avere due \gls{codebaseg} distinti, da mantenere separatamente.
+Un ulteriore svantaggio legato intrinsecamente ad iOS è il dover sviluppare, eseguire test, fare debugging e compilazione su un computer con sistema operativo MacOS (che richiede un Mac) e l'\gls{ide} XCode di Apple.\\
+Per questi motivi si è optato per realizzare un'app multipiattaforma che permette, oltre a raggiungere l'utenza finora non raggiunta, di andare gradualmente a sostituire la precedente applicazione.
+Un punto fondamentale dello sviluppo di applicazioni multipiattaforma è la scelta della tecnologia, in quanto a disposizione per lo sviluppatore ce ne sono molteplici e con diverse caratteristiche.
+Tutte queste hanno in comune la possibilità di avere un solo \gls{codebaseg} per entrambe le versione dell'app (per Android e per iOS) e un'interfaccia uniforme fra i vari dispositivi.
+Inoltre, non essendo un'applicazione nativa, usa un linguaggio di programmazione non compatibile con i \gls{sdk} messi a disposizione da Google e Apple per lo sviluppo di applicazioni per i loro sistemi operativi. Tipicamente questo linguaggio è JavaScript o il suo superset \gls{tsg}.
+Un'importante differenza, o svantaggio, è che utilizzando un \gls{frameworkg} o un linguaggio che non ha accesso nativamente alle funzionalità e alle librerie del sistema operativo deve avere dei modi per astrarle, tramite integrazioni nel \gls{frameworkg} o tramite librerie esterne, spesso non sviluppate dallo stesso team che sviluppa la tecnologia multipiattaforma, richiedendo più attenzione da parte dello sviluppatore.\\
+Come è stato detto in precedenza, per questo progetto è stata scelta una tecnologia multipiattaforma. Questo è stato fatto sia per le possibilità offerte dalla tecnologia scelta, che sta crescendo sempre di più in adozione da parte degli sviluppatori, sia poiché risultava interessante l'ecosistema fornito e, infine, per gli svantaggi precedentemente citati dovuti allo sviluppo per iOS.

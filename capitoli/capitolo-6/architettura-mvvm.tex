@@ -1,0 +1,168 @@
+%**************************************************************
+\section{Model View ViewModel, l'architettura scelta}
+\label{sec:architettura-mvvm}
+
+%**************************************************************
+\subsection{Ragioni della scelta}
+\label{subsec:ragioni-scelta}
+
+Dopo aver analizzato le varie caratteristiche delle architetture presentate nella precedente sezione, è stata scelta l'architettura \emph{Model View ViewModel}.\\
+Innanzitutto, \emph{MVVM} è consigliato per alcune delle altre tecnologie multipiattaforma che sono state ipotizzate per realizzare il prodotto di stage, per via della natura dichiarativa con cui viene implementata l'interfaccia utente.
+Inoltre, l'utilizzo del \gls{designpatterng} Observer doppiamente permette di garantire un notevole disaccoppiamento fra le tre parti dell'architettura, permettendo di conseguenza una maggior facilità nel testing.\\
+Per quanto riguarda le altre architetture, \emph{Model View Presenter} è stata scartata principalmente per la necessità del \emph{Presenter} di aggiornare la vista, che non si trova molto in sintonia con il metodo di rappresentazione dell'interfaccia di \emph{Flutter}.\\
+\emph{Model View Controller} non è stato scelto perché il \emph{Model} avrebbe avuto troppi oneri: nel sistema da realizzare per lo stage era necessario memorizzare i dati ottenuti dalle \gls{restg} per poterli utilizzare per più scopi in più viste, quindi richiedendo che in qualche punto dell'architettura ci sia questo tipo di disponibilità (possibilmente non nella \emph{View}).\\
+Infine, \emph{Clean Architecture}, come affermato nella sotto-sezione in cui la si illustrava, è certamente una buona architettura ma difficilmente implementabile con l'esperienza avuta fino ad ora. È comunque un'architettura valida e con i dovuti aggiustamenti \emph{MVVM} potrebbe essere adattata a questa.
+
+%**************************************************************
+\subsection{Organizzazione dei package}
+\label{subsec:organizzazione-package}
+
+\input{capitoli/capitolo-6/organizzazione-package/it-tecsen-smacs}
+
+\input{capitoli/capitolo-6/organizzazione-package/screen}
+
+\input{capitoli/capitolo-6/organizzazione-package/view}
+
+\input{capitoli/capitolo-6/organizzazione-package/viewmodel}
+
+\input{capitoli/capitolo-6/organizzazione-package/utils}
+
+\input{capitoli/capitolo-6/organizzazione-package/model}
+
+\input{capitoli/capitolo-6/organizzazione-package/webserviceclient}
+
+\input{capitoli/capitolo-6/organizzazione-package/widget}
+
+\input{capitoli/capitolo-6/organizzazione-package/config}
+
+%**************************************************************
+\subsection{Il design pattern Observer: Provider, ChangeNotifier e Consumer}
+\label{subsec:observer-provider-changenotifier}
+
+È stato detto che una delle caratteristiche dell'architettura MVVM è la presenza di un doppio Observer.\\
+L'Observer è un \gls{designpatterng} formalizzato dalla "Gang of Four" nel libro \emph{Design Patterns - Elementi per il riuso di software ad oggetti}.\\
+Permette:
+\begin{itemize}
+  \item di avere dipendenze di tipo "1 a molti" fra oggetti, permettendo di avere consistenza in maniera agevole;
+  \item divide gli oggetti possessori di stato nella categoria \emph{Subject} e quelli che dipendono da questo stato in \emph{Observer};
+  \item quando un \emph{Subject} aggiorna il suo stato notifica i propri \emph{Observer} (internamente dispone di un riferimento per ciascuno di questi, ma non sa nulla di loro per via dell'astrazione).
+\end{itemize}
+Di seguito viene presentato un esempio per illustrare come è stato implementato il \gls{designpatterng} Observer all'interno del prodotto.
+L'esempio si riferisce alla parte del sistema in cui un \emph{ViewModel} ha ricevuto dai \gls{dao} da cui dipende una nuova lista e quindi notifica qualsiasi \emph{View} in ascolto.
+Solo alcune parti (quelle fondamentali ai fini dell'esempio) vengono riportate.
+
+%**************************************************************
+\subsubsection{Il Subject: ChangeNotifier}
+\label{subsubsec:subject-changenotifier}
+
+In \emph{Flutter} (e non Dart, perché è propriamente una caratteristica del \gls{frameworkg}) un \emph{Subject} è realizzabile molto semplicemente aggiungendo nella firma di una classe il mixin \texttt{ChangeNotifier}, come mostrato di seguito:
+
+\begin{lstlisting}
+class DeviceList with ChangeNotifier implements DeviceListVM {
+  ...
+
+  DeviceListDAO _deviceListDAO;
+  
+  ...
+}
+\end{lstlisting}
+In questa porzione di classe sono messi in vista anche \texttt{DeviceListVM}, che è la dipendenza di cui necessita la \emph{View} e \texttt{DeviceListDAO} che è invece una dipendenza di questo \emph{ViewModel}.\\
+Nel metodo in cui viene aggiornato lo stato avviene anche la notifica degli \emph{Observer}:
+\begin{lstlisting}
+@override
+Future<void> syncDeviceList({final bool forceDownload = false}) async {
+    ...
+
+    await _deviceListDAO.syncDeviceList(_token, _deviceTree, forceDownload: forceDownload);
+
+    notifyListeners();
+}
+\end{lstlisting}
+Come si può notare, dopo aver chiamato il metodo \texttt{syncDeviceList} di \texttt{DeviceListDAO} a riga 5, viene invocato il metodo \texttt{notifyListeners} che appartiene al \emph{mixin} \texttt{ChangeNotifier}.\\
+Una volta ricevuta la notifica, uno dei primi metodi che viene richiamato dalla vista è quello che ritorna la cardinalità della lista che è appena stata scaricata (successivamente seguono altre chiamate), in base alla selezione dell'utente:
+\begin{lstlisting}
+@override
+Future<int> get selectedDeviceListLength async {
+  List<Device> devices;
+
+  if (_activeDisplayMode == DisplayMode.ALPHABETICAL_ORDER) {
+    devices = _deviceListDAO.alphabeticalOrderDeviceList;
+  } else {
+    devices = _deviceListDAO.warningDeviceList;
+  }
+
+  if (_nearbyDevicesMode) {
+    devices = await _deviceListDAO.nearbyDeviceList(deviceList);
+  }
+
+  return devices.length;
+}
+\end{lstlisting}
+I due costrutti \texttt{if} servono a verificare che tipo di lista va ritornata all'utente (in base alle sue precedenti selezioni), per invocare il metodo corretto.
+
+%**************************************************************
+\subsubsection{Il Subject: Provider}
+\label{subsubsec:subject-provider}
+
+Come è stato già illustrato al capitolo 5 sulla "\hyperref[cap:dependency-injection]{Dependency Injection}", un'istanza di \texttt{DeviceListVM} va messa a disposizione dei widget figli attraverso un \emph{Provider} come antenato nel \emph{Widget tree}.\\
+In questo caso, visto che \texttt{DeviceListVM} usa \texttt{ChangeNotifier} ed ha delle dipendenze esterne (due, per l'esattezza), viene istanziato un \texttt{ChangeNotifierProxyProvider2}.
+\begin{lstlisting}
+class DeviceListScreen extends StatelessWidget {
+  ...
+
+  @override
+  Widget build(BuildContext context) {
+    return ChangeNotifierProxyProvider2<IdentityDAO, DeviceListDAO, DeviceListVM>(
+      // Viene creata l'istanza ma non viene usata 
+      // (non ha i riferimenti ai DAO).
+      create: (_) => DeviceList(),
+      // Viene aggiornata l'istanza con i nuovi DAO.
+      update: (_, identityDao, deviceListDao, deviceListVM) {
+        deviceListVM.deviceListDAO = deviceListDao;
+        deviceListVM.identityDAO = identityDao;
+        return deviceListVM;
+      },
+
+      ...
+    );
+  }
+}
+\end{lstlisting}
+In \texttt{ChangeNotifierProxyProvider2} il parametro \texttt{update} gestisce il caso in cui le dipendenze di \texttt{DeviceListVM} chiamino anche loro \texttt{notifyListeners}.
+
+%**************************************************************
+\subsubsection{L'Observer: Consumer}
+\label{subsubsec:observer-consumer}
+
+Un altro modo per chiamare il \gls{designpatterng} Observer è "Producer-Consumer", in cui il \emph{Producer} corrisponde al \emph{Subject} e l'\emph{Observer} corrisponde al \emph{Consumer}.\\
+Senza troppa fantasia, un widget che in \emph{Flutter} si occupa di agire da \emph{Consumer} ha proprio questo nome: si registra come \emph{Observer} rispetto ad un \emph{ChangeNotifier} e ogni volta che riceve una notifica ricostruisce il suo sotto albero (la porzione di \emph{Widget tree} radicata nel suo primo discendente).
+% Extra a capo per arrivare a fine pagina
+\clearpage
+
+\begin{lstlisting}
+class DeviceListScreen extends StatelessWidget {
+  ...
+
+  @override
+  Widget build(BuildContext context) {
+    ...
+  
+    return ChangeNotifierProxyProvider2<IdentityDAO, DeviceListDAO, DeviceListVM>(
+      child: Consumer<DeviceListVM>(
+        // Il terzo parametro, noRedraw, corrisponde ad un widget che non va ricostruito nel caso DeviceListVM emetta notifiche.
+        builder: (_, deviceListVM, noRedraw) {
+          return ScreenViewSafeContainer(
+            child: DeviceListView(),
+            bottomAppBar: FutureBuilder<int>(
+            future: deviceListVM.selectedDeviceListLength,
+            ...
+          );
+        }
+        ...
+      ),
+    );
+  }
+}
+\end{lstlisting}
+Come si può notare si è continuato l'esempio di prima (è la stessa classe e lo stesso metodo \texttt{build}).\\
+Come affermato poc'anzi, ad ogni \texttt{notifyListeners} invocato da \texttt{DeviceListVM}, verrà ricostruito il sottoalbero radicato nel primo discendente disponibile del widget \texttt{Consumer}, ovvero \texttt{ScreenViewSafeContainer} (propriamente viene invocato nuovamente il \emph{callback} \texttt{builder} a riga 11, ma è un dettaglio del \gls{frameworkg} che non cambia il principio di funzionamento).

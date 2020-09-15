@@ -1,0 +1,136 @@
+%**************************************************************
+\section{InheritedWidget e la libreria Provider: Flutter}
+\label{sec:inheritedwidget-provider}
+
+\emph{Flutter} non ha un vero e proprio meccanismo di \emph{IoC} integrato, quindi le dipendenze vanno comunque risolte manualmente.\\
+Come è stato visto, nonostante la risoluzione delle dipendenze in \emph{Spring} sia automatica, richiede comunque che esse vengano dichiarate nei costruttori delle classi.
+Anche in \emph{Flutter} questo è possibile, ma può verificarsi una situazione in cui viene istanziata una dipendenza ad una certa altezza del \emph{Widget tree} e che serva ad un widget che si trovi molti livelli più in basso (e non è così difficile trovare un semplice esempio in Flutter che richieda molti widget).\\
+La cosa più semplice e ovvia da fare è aggiungere un parametro al costruttore di ciascuna classe/widget che si trova nel cammino fra dove la dipendenza è dichiarata e dove viene usata.
+Il problema di questo approccio è che i widget intermedi hanno un argomento con il solo scopo di passarlo al widget successivo, ma che non usano.
+Inoltre, se si deve modificare la struttura del \emph{Widget tree} o se le dipendenze iniziano a crescere in numero, può crearsi molta confusione.
+
+%**************************************************************
+\subsection{Creazione di una dipendenza}
+\label{subsec:creazione-dipendenza-flutter}
+
+Per evitare questo tipo di problemi, in \emph{Flutter} è presente un tipo di widget ideato appositamente per risolvere questo tipo di problema. È diverso da \texttt{StatelessWidget} e \texttt{StatefulWidget} e si chiama \texttt{InheritedWidget} (nonostante il termine \emph{inherited} non ha nulla a che vedere con l'\emph{inheritance}, l'ereditarietà fra classi).
+Questo tipo di widget non disegna nulla a schermo, è immutabile come gli altri due tipi, e permette di accedere ai suoi campi dati e metodi (pubblici) da tutti i widget suoi discendenti.
+È possibile accedervi mediante il \texttt{BuildContext}, riferimento che hanno tutti i widget come argomento del metodo \texttt{build}.\\
+Nonostante questa importante funzionalità, \texttt{InheritedWidget} non viene molto usato in quanto molto "primitivo" come meccanismo. Al suo posto vengono usate librerie di \gls{dig}. La più semplice, e consigliata anche nella documentazione ufficiale di \emph{Flutter}, è \emph{Provider}\footcite{site:provider}.\\
+\emph{Provider} è una libreria che fa da wrapper alle funzionalità di \texttt{InheritedWidget}, e permette di crearne di vario tipo (elencati quelli conosciuti perché usati nel progetto di stage):
+\begin{enumerate}
+    \item \texttt{Provider} permette di istanziare una dipendenza di qualsiasi tipo, che non dipende da altre disponibili via \texttt{InheritedWidget};
+    \item \texttt{ProxyProvider} è come il precedente, ma può permettere la dichiarazione di dipendenze in ingresso necessarie per la sua creazione e che sono rese disponibili tramite \texttt{InheritedWidget};
+    \item \texttt{ChangeNotifierProvider} è come il primo, ma la dipendenza implementa, estende o usa come mixin \texttt{ChangeNotifier} (che permette di utilizzare il \gls{designpatterng} Observer);
+    \item \texttt{ChangeNotifierProxyProvider} come il secondo, ma nuovamente la dipendenza dispone di \texttt{ChangeNotifier}.
+\end{enumerate}
+Il secondo e il quarto tipo di \texttt{Provider} sono disponibili in più versioni, che accettano da 0 fino a 6 dipendenze in ingresso.\\
+L'esempio mostra come utilizzare la libreria:
+\begin{lstlisting}
+class XYZ extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Provider(
+      create: (context) => Dipendenza(),
+      child: ...,
+    );
+  }
+}
+\end{lstlisting}
+La dipendenza viene istanziata dal \emph{callback} presente in \texttt{create}. Di default, se non specificato il parametro \texttt{lazy} (di tipo \texttt{bool}), la dipendenza viene istanziata solo se fra i discendenti del widget ce n'è uno che lo richiede (a fini di efficienza).
+
+%**************************************************************
+\subsection{Richiesta di una dipendenza}
+\label{subsec:richiesta-dipendenza-flutter}
+
+Per richiedere una dipendenza sono disponibili due modalità: la prima richiede l'utilizzo di un metodo statico della classe \texttt{Provider}, la seconda un widget chiamato \texttt{Consumer}.
+
+%**************************************************************
+\subsubsection{Utilizzo di un metodo statico: Provider.of}
+\label{subsubsec:utilizzo-metodo-statico-providerof-flutter}
+
+Questo tipo di modalità è quella che ricalca maggiormente l'originale utilizzo di \texttt{InheritedWidget}.\\
+Dove è necessario accedere alla dipendenza, si utilizza il metodo che ha come firma completa \texttt{T of<T>(BuildContext context)}.
+La \texttt{T} indica un tipo generico, quello che in Java si chiamerebbe \emph{generic} e in C++ \emph{template}, e questo si riferisce al tipo della dipendenza richiesta.
+
+\begin{lstlisting}
+// Ricevente deve essere discendente del widget XYZ,
+// altrimenti non permette di accedere a Dipendenza.
+class ABC extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Ricevente(
+      dipendenza: Provider.of<Dipendenza>(context),
+      child: ...,
+    );
+  }
+}
+\end{lstlisting}
+In questo caso il widget \texttt{Ricevente} riceve la dipendenza richiesta.
+\texttt{Dipendenza} può essere stata creata con uno qualsiasi dei tipi di \texttt{Provider} presentati sopra, quindi può capitare che \texttt{Dipendenza} si aggiorni o invii notifiche mediante \texttt{ChangeNotifier}:
+\begin{itemize}
+    \item se si vuole che un cambiamento venga riflesso sull'interfaccia grafica, è sufficiente quanto scritto nell'esempio;
+    \item se invece non si vuole che l'interfaccia grafica si aggiorni di conseguenza, va usata l'istruzione \texttt{Provider.of<Dipendenza>(context, listen: false)}.
+\end{itemize}
+Come si può evincere dall'esempio mostrato, il parametro \texttt{listen} è implicitamente \texttt{true}.
+
+%**************************************************************
+\subsubsection{Utilizzo di un widget: Consumer}
+\label{subsubsec:utilizzo-widget-consumer-flutter}
+
+Questa modalità è assolutamente equivalente alla precedente con \texttt{listen} non impostato.\\
+È usabile in qualsiasi caso in cui è necessario ricostruire l'interfaccia sempre e comunque, ma necessario in altri casi particolari:
+\begin{enumerate}
+    \item la dipendenza è necessaria nel primo discendente del \texttt{Provider}, in cui si ha lo stesso \texttt{BuildContext};
+    \item non si vuole che l'intera porzione di \emph{Widget tree} in cui si è venga ricostruita.
+\end{enumerate}
+Il caso descritto nell'esempio 1 è il seguente:
+\begin{lstlisting}
+class XYZ extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Provider(
+      create: (context) => Dipendenza(),
+      child: Ricevente(
+        dipendenza: Provider.of<Dipendenza>(context),
+        child: ...,
+      );
+    );
+  }
+}
+\end{lstlisting}
+Il problema è risolvibile sostituendo la dichiarazione di \texttt{Ricevente} con questo:
+\begin{lstlisting}
+Consumer<Dipendenza>(
+  builder: (context, dipendenza, noRebuild) => Ricevente(
+    dipendenza: dipendenza,
+    child: ...
+  ),
+  child: ...
+)
+\end{lstlisting}
+Con \texttt{Consumer} si può dichiarare, usando la proprietà \texttt{child}, un widget (e quindi, per ricorsività, anch'esso un \emph{Widget tree}) che quando \texttt{dipendenza} si aggiorna non richiede il rebuild.
+Per utilizzarlo nella parte di \emph{Widget tree} radicata in \texttt{Ricevente} basta utilizzare l'argomento \texttt{noRebuild} di \texttt{builder}.\\\\
+Il caso dell'esempio 2 è più fine:
+\begin{lstlisting}
+class ABC extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return WidgetCostoso(
+      child: Ricevente(
+        dipendenza: Provider.of<Dipendenza>(context),
+        child: ...,
+      ),
+    );
+  }
+}
+\end{lstlisting}
+In questo caso, molto simile a quello della spiegazione di \texttt{Provider.of}, se \texttt{Dipendenza} viene aggiornata viene rilanciato il metodo \texttt{build} di \texttt{ABC} e non solo quello di \texttt{Ricevente} (con la conseguenza di rieseguire \texttt{build} anche di \texttt{WidgetCostoso}).\\
+Il problema è ovviabile come per l'esempio 1.
+
+%**************************************************************
+\subsection{Osservazioni sul procedimento}
+\label{subsec:osservazioni-procedimento-flutter}
+
+Questo è tutto ciò che c'è da fare per la \gls{dig} in \emph{Flutter}. L'\emph{IoC} o altri tipi di \gls{dig} diversi dall'uso di \texttt{InheritedWidget} non sono ancora implementati per decisione degli sviluppatori.\\
+Altri metodi che non richiedono \emph{InheritedWidget} sono disponibili: essi registrano le dipendenze all'interno di un contenitore in memoria e permettono di accedervi attraverso metodi statici. Nessuno di questi è citato o consigliato fortemente quanto \emph{Provider} nella documentazione ufficiale e per questo motivo si è evitato di utilizzarli.

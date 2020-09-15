@@ -1,0 +1,294 @@
+%**************************************************************
+% file contenente le impostazioni della tesi
+%**************************************************************
+
+%**************************************************************
+% Frontespizio
+%**************************************************************
+
+% Autore
+\newcommand{\myName}{Tommaso Azzalin}                                    
+\newcommand{\myTitle}{SMacs SMart city system - Sviluppo di un'app multipiattaforma}
+
+% Tipo di tesi                   
+\newcommand{\myDegree}{Tesi di laurea triennale}
+
+% Università             
+\newcommand{\myUni}{Università degli Studi di Padova}
+
+% Facoltà       
+\newcommand{\myFaculty}{Corso di Laurea in Informatica}
+
+% Dipartimento
+\newcommand{\myDepartment}{Dipartimento di Matematica "Tullio Levi-Civita"}
+
+% Titolo del relatore
+\newcommand{\profTitle}{Prof.ssa }
+
+% Relatore
+\newcommand{\myProf}{Silvia Crafa}
+
+% Luogo
+\newcommand{\myLocation}{Padova}
+
+% Anno accademico
+\newcommand{\myAA}{2019-2020}
+
+% Data discussione
+\newcommand{\myTime}{24 settembre 2020}
+
+%**************************************************************
+% Sommario
+%**************************************************************
+
+% Nome azienda
+\newcommand{\myCompany}{TEC Systems Engineering S.r.l\@.}
+
+% Nome tutor aziendale
+\newcommand{\myTutor}{Andrea Brunello}
+
+
+%**************************************************************
+% Impostazioni di impaginazione
+% see: http://wwwcdf.pd.infn.it/AppuntiLinux/a2547.htm
+%**************************************************************
+
+\setlength{\parindent}{14pt}   % larghezza rientro della prima riga
+\setlength{\parskip}{0pt}   % distanza tra i paragrafi
+
+
+%**************************************************************
+% Impostazioni di biblatex
+%**************************************************************
+\bibliography{bibliografia} % database di biblatex 
+
+\defbibheading{bibliography} {
+    \cleardoublepage
+    \phantomsection 
+    \addcontentsline{toc}{chapter}{\bibname}
+    \chapter*{\bibname\markboth{\bibname}{\bibname}}
+}
+
+\setlength\bibitemsep{1.5\itemsep} % spazio tra entry
+
+\DeclareBibliographyCategory{opere}
+\DeclareBibliographyCategory{web}
+
+\defbibheading{opere}{\section*{Riferimenti bibliografici}}
+\defbibheading{web}{\section*{Siti Web consultati}}
+
+
+%**************************************************************
+% Impostazioni di caption
+%**************************************************************
+\captionsetup{
+    tableposition=top,
+    figureposition=bottom,
+    font=small,
+    format=hang,
+    labelfont=bf
+}
+
+%**************************************************************
+% Impostazioni di glossaries
+%**************************************************************
+\input{glossario} % database di termini
+\makeglossaries
+
+
+%**************************************************************
+% Impostazioni di graphicx
+%**************************************************************
+\graphicspath{{immagini/}} % cartella dove sono riposte le immagini
+
+%**************************************************************
+% Impostazioni di longtable
+%**************************************************************
+
+\usepackage{array} % colonne custom per tabelle
+
+\newcolumntype{L}[1]{>{\raggedright\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\newcolumntype{C}[1]{>{\centering\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\newcolumntype{R}[1]{>{\raggedleft\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+
+%**************************************************************
+% Impostazioni di hyperref
+%**************************************************************
+\hypersetup{
+    %hyperfootnotes=false,
+    %pdfpagelabels,
+    %draft,	% = elimina tutti i link (utile per stampe in bianco e nero)
+    colorlinks=true,
+    linktocpage=true,
+    pdfstartpage=1,
+    % pdfstartview=FitV,
+    pdfstartview=,
+    % decommenta la riga seguente per avere link in nero (per esempio per la stampa in bianco e nero)
+    %colorlinks=false, linktocpage=false, pdfborder={0 0 0}, pdfstartpage=1, pdfstartview=FitV,
+    breaklinks=true,
+    pdfpagemode=UseNone,
+    pageanchor=true,
+    pdfpagemode=UseOutlines,
+    plainpages=false,
+    bookmarksnumbered,
+    bookmarksopen=true,
+    bookmarksopenlevel=1,
+    hypertexnames=true,
+    pdfhighlight=/O,
+    %nesting=true,
+    %frenchlinks,
+    urlcolor=webbrown,
+    linkcolor=RoyalBlue,
+    citecolor=webgreen,
+    %pagecolor=RoyalBlue,
+    %urlcolor=Black, linkcolor=Black, citecolor=Black, %pagecolor=Black,
+    pdftitle={\myTitle},
+    pdfauthor={\textcopyright\ \myName, \myUni, \myFaculty},
+    pdfsubject={},
+    pdfkeywords={},
+    pdfcreator={pdfLaTeX},
+    pdfproducer={LaTeX}
+}
+
+%**************************************************************
+% Impostazioni di itemize
+%**************************************************************
+\renewcommand{\labelitemi}{$\bullet$}
+
+%\renewcommand{\labelitemi}{$\bullet$}
+% \renewcommand{\labelitemii}{$\cdot$}
+%\renewcommand{\labelitemiii}{$\diamond$}
+%\renewcommand{\labelitemiv}{$\ast$}
+
+
+%**************************************************************
+% Impostazioni di xcolor
+%**************************************************************
+\definecolor{webgreen}{rgb}{0,.5,0}
+\definecolor{webbrown}{rgb}{.6,0,0}
+
+
+
+%**************************************************************
+% Impostazioni di listings
+%**************************************************************
+\lstset{
+    language=C++,
+    keywordstyle=\color{RoyalBlue}, %\bfseries,
+    basicstyle=\small\ttfamily,
+    emph={
+        % C++
+        int,char,double,float,unsigned,string,cstdlib,
+        % Qt
+        QString,QWidget,QPushButton,QApplication,ExampleApp,
+        % Dart
+        var,final,mixin,with,extends,implements
+        % Flutter
+    },
+    emphstyle=\color{RoyalBlue},
+    directivestyle=\color{black},
+    commentstyle=\color{webgreen}\ttfamily,
+    stringstyle=\ttfamily,
+    numbers=left,
+    numberstyle=\scriptsize, %\tiny
+    stepnumber=1,
+    numbersep=8pt,
+    showstringspaces=false,
+    breaklines=true,
+    frameround=ffff,
+    frame=single
+} 
+
+
+%**************************************************************
+% Altro
+%**************************************************************
+
+\newcommand{\omissis}{[\dots\negthinspace]} % produce [...]
+
+% eccezioni all'algoritmo di sillabazione
+\hyphenation
+{
+    az-za-lin
+    en-gi-neer-ing
+    ob-serv-er
+}
+
+\newcommand{\sectionname}{sezione}
+\addto\captionsitalian{\renewcommand{\figurename}{Figura}
+                       \renewcommand{\tablename}{Tabella}}
+
+\newcommand{\glsfirstoccur}{\ap{{[g]}}}
+
+\newcommand{\intro}[1]{\emph{\textsf{#1}}}
+
+%**************************************************************
+% Environment per ``rischi''
+%**************************************************************
+\newcounter{riskcounter}                % define a counter
+\setcounter{riskcounter}{0}             % set the counter to some initial value
+
+%%%% Parameters
+% #1: Title
+\newenvironment{risk}[1]{
+    \refstepcounter{riskcounter}        % increment counter
+    \par \noindent                      % start new paragraph
+    \textbf{\arabic{riskcounter}. #1}   % display the title before the 
+                                        % content of the environment is displayed 
+}{
+    \par\medskip
+}
+
+\newcommand{\riskname}{Rischio}
+
+\newcommand{\riskdescription}[1]{\textbf{\\Descrizione:} #1.}
+
+\newcommand{\risksolution}[1]{\textbf{\\Soluzione:} #1.}
+
+%**************************************************************
+% Environment per ``use case''
+%**************************************************************
+\newcounter{usecasecounter}             % define a counter
+\setcounter{usecasecounter}{0}          % set the counter to some initial value
+
+%%%% Parameters
+% #1: ID
+% #2: Nome
+\newenvironment{usecase}[2]{
+    \renewcommand{\theusecasecounter}{\usecasename #1}  % this is where the display of 
+                                                        % the counter is overwritten/modified
+    \refstepcounter{usecasecounter}             % increment counter
+    \vspace{10pt}
+    \par \noindent                              % start new paragraph
+    {\large \textbf{\usecasename #1 - #2}}       % display the title before the 
+                                                % content of the environment is displayed 
+    \medskip
+}{
+    \medskip
+}
+
+\newcommand{\usecasename}{UC}
+
+\newcommand{\usecaseprimaryactors}[1]{\textbf{\\Attori principali:} #1. \vspace{4pt}}
+\newcommand{\usecasesecondaryactors}[1]{\textbf{\\Attori secondari:} #1. \vspace{4pt}}
+\newcommand{\usecasepre}[1]{\textbf{\\Precondizioni:} #1 \vspace{4pt}}
+\newcommand{\usecasedesc}[1]{\textbf{\\Scenario principale:} #1 \vspace{4pt}}
+\newcommand{\usecasepost}[1]{\textbf{\\Postcondizioni:} #1 \vspace{4pt}}
+\newcommand{\usecasegen}[1]{\textbf{\\Generalizzazioni:} #1 \vspace{4pt}}
+\newcommand{\usecaseext}[1]{\textbf{\\Estensioni:} #1 \vspace{4pt}}
+
+%**************************************************************
+% Environment per ``namespace description''
+%**************************************************************
+
+\newenvironment{namespacedesc}{
+    \vspace{10pt}
+    \par \noindent                              % start new paragraph
+    \begin{description} 
+}{
+    \end{description}
+    \medskip
+}
+
+\newcommand{\classdesc}[2]{\item[\textbf{#1:}] #2}
+
